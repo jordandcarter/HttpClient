@@ -63,7 +63,7 @@ void HttpClient::request(http_request_t &aRequest, http_response_t &aResponse, h
     // to ensure all fields are zero
     bool connected = false;
     if(aRequest.hostname!=NULL) {
-        connected = client.connect(aRequest.hostname.c_str(), (aRequest.port) ? aRequest.port : 80 );
+        connected = client.connect(aRequest.hostname, (aRequest.port) ? aRequest.port : 80 );
     }   else {
         connected = client.connect(aRequest.ip, aRequest.port);
     }
@@ -111,7 +111,7 @@ void HttpClient::request(http_request_t &aRequest, http_response_t &aResponse, h
     // Send General and Request Headers.
     sendHeader("Connection", "close"); // Not supporting keep-alive for now.
     if(aRequest.hostname!=NULL) {
-        sendHeader("HOST", aRequest.hostname.c_str());
+        sendHeader("HOST", aRequest.hostname);
     }
 
     //Send Entity Headers
