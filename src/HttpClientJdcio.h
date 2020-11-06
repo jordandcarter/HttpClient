@@ -55,7 +55,7 @@ typedef struct
   char body[255];
 } http_response_t;
 
-class HttpClient {
+class HttpClientJdcio {
 public:
     /**
     * Public references to variables.
@@ -66,7 +66,7 @@ public:
     /**
     * Constructor.
     */
-    HttpClient(void);
+    HttpClientJdcio(void);
 
     /**
     * HTTP request methods.

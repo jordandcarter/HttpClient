@@ -1,11 +1,11 @@
-#include "HttpClient.h"
+#include "HttpClientJdcio.h"
 
 static const uint16_t DEFAULT_TIMEOUT = 100; // Allow maximum 5s between data packets.
 
 /**
 * Constructor.
 */
-HttpClient::HttpClient()
+HttpClientJdcio::HttpClientJdcio()
 {
 
 }
@@ -13,7 +13,7 @@ HttpClient::HttpClient()
 /**
 * Method to send a header, should only be called from within the class.
 */
-void HttpClient::sendHeader(const char* aHeaderName, const char* aHeaderValue)
+void HttpClientJdcio::sendHeader(const char* aHeaderName, const char* aHeaderValue)
 {
     client.print(aHeaderName);
     client.print(": ");
@@ -26,7 +26,7 @@ void HttpClient::sendHeader(const char* aHeaderName, const char* aHeaderValue)
     #endif
 }
 
-void HttpClient::sendHeader(const char* aHeaderName, const int aHeaderValue)
+void HttpClientJdcio::sendHeader(const char* aHeaderName, const int aHeaderValue)
 {
     client.print(aHeaderName);
     client.print(": ");
@@ -39,7 +39,7 @@ void HttpClient::sendHeader(const char* aHeaderName, const int aHeaderValue)
     #endif
 }
 
-void HttpClient::sendHeader(const char* aHeaderName)
+void HttpClientJdcio::sendHeader(const char* aHeaderName)
 {
     client.println(aHeaderName);
 
@@ -53,7 +53,7 @@ void HttpClient::sendHeader(const char* aHeaderName)
 * in the aResponse struct and set the headers and the options in the aRequest
 * struct.
 */
-void HttpClient::request(http_request_t &aRequest, http_response_t &aResponse, http_header_t headers[], const char* aHttpMethod)
+void HttpClientJdcio::request(http_request_t &aRequest, http_response_t &aResponse, http_header_t headers[], const char* aHttpMethod)
 {
     // If a proper response code isn't received it will be set to -1.
     aResponse.status = -1;
@@ -71,16 +71,16 @@ void HttpClient::request(http_request_t &aRequest, http_response_t &aResponse, h
     #ifdef LOGGING
     if (connected) {
         if(aRequest.hostname!=NULL) {
-            Serial.print("HttpClient>\tConnecting to: ");
+            Serial.print("HttpClientJdcio>\tConnecting to: ");
             Serial.print(aRequest.hostname);
         } else {
-            Serial.print("HttpClient>\tConnecting to IP: ");
+            Serial.print("HttpClientJdcio>\tConnecting to IP: ");
             Serial.print(aRequest.ip);
         }
         Serial.print(":");
         Serial.println(aRequest.port);
     } else {
-        Serial.println("HttpClient>\tConnection failed.");
+        Serial.println("HttpClientJdcio>\tConnection failed.");
     }
     #endif
 
@@ -101,7 +101,7 @@ void HttpClient::request(http_request_t &aRequest, http_response_t &aResponse, h
     client.print(" HTTP/1.0\r\n");
 
     #ifdef LOGGING
-    Serial.println("HttpClient>\tStart of HTTP Request.");
+    Serial.println("HttpClientJdcio>\tStart of HTTP Request.");
     Serial.print(aHttpMethod);
     Serial.print(" ");
     Serial.print(aRequest.path);
@@ -154,7 +154,7 @@ void HttpClient::request(http_request_t &aRequest, http_response_t &aResponse, h
     }
 
     #ifdef LOGGING
-    Serial.println("HttpClient>\tEnd of HTTP Request.");
+    Serial.println("HttpClientJdcio>\tEnd of HTTP Request.");
     #endif
 
     // clear response buffer
@@ -184,7 +184,7 @@ void HttpClient::request(http_request_t &aRequest, http_response_t &aResponse, h
         #ifdef LOGGING
         int bytes = client.available();
         if(bytes) {
-            Serial.print("\r\nHttpClient>\tReceiving TCP transaction of ");
+            Serial.print("\r\nHttpClientJdcio>\tReceiving TCP transaction of ");
             Serial.print(bytes);
             Serial.println(" bytes.");
         }
@@ -201,7 +201,7 @@ void HttpClient::request(http_request_t &aRequest, http_response_t &aResponse, h
                 error = true;
 
                 #ifdef LOGGING
-                Serial.println("HttpClient>\tError: No data available.");
+                Serial.println("HttpClientJdcio>\tError: No data available.");
                 #endif
 
                 break;
@@ -216,7 +216,7 @@ void HttpClient::request(http_request_t &aRequest, http_response_t &aResponse, h
                     bufferPosition = 0;
                     inHeaders = false;
                     #ifdef LOGGING
-                    Serial.print("\r\nHttpClient>\tEnd of HTTP Headers (");
+                    Serial.print("\r\nHttpClientJdcio>\tEnd of HTTP Headers (");
                     Serial.print(aResponse.status);
                     Serial.println(")");
                     #endif
@@ -235,7 +235,7 @@ void HttpClient::request(http_request_t &aRequest, http_response_t &aResponse, h
                 error = true;
 
                 #ifdef LOGGING
-                Serial.println("\r\nHttpClient>\tError: Response body larger than buffer.");
+                Serial.println("\r\nHttpClientJdcio>\tError: Response body larger than buffer.");
                 #endif
                 break;
             }
@@ -245,7 +245,7 @@ void HttpClient::request(http_request_t &aRequest, http_response_t &aResponse, h
 
         #ifdef LOGGING
         if (bytes) {
-            Serial.print("\r\nHttpClient>\tEnd of TCP transaction.");
+            Serial.print("\r\nHttpClientJdcio>\tEnd of TCP transaction.");
         }
         #endif
 
@@ -261,22 +261,22 @@ void HttpClient::request(http_request_t &aRequest, http_response_t &aResponse, h
 
     #ifdef LOGGING
     if (timeout) {
-        Serial.println("\r\nHttpClient>\tError: Timeout while reading response.");
+        Serial.println("\r\nHttpClientJdcio>\tError: Timeout while reading response.");
     }
-    Serial.print("\r\nHttpClient>\tEnd of HTTP Response (");
+    Serial.print("\r\nHttpClientJdcio>\tEnd of HTTP Response (");
     Serial.print(millis() - firstRead);
     Serial.println("ms).");
     #endif
     client.stop();
 
     #ifdef LOGGING
-    Serial.print("HttpClient>\tStatus Code: ");
+    Serial.print("HttpClientJdcio>\tStatus Code: ");
     Serial.println(aResponse.status);
     #endif
 
     if (inHeaders) {
         #ifdef LOGGING
-        Serial.println("HttpClient>\tError: Can't find HTTP response body.");
+        Serial.println("HttpClientJdcio>\tError: Can't find HTTP response body.");
         #endif
 
         return;
