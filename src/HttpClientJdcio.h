@@ -52,7 +52,7 @@ typedef struct
 typedef struct
 {
   int status;
-  char body[255];
+  String body;
 } http_response_t;
 
 class HttpClientJdcio {
@@ -61,7 +61,7 @@ public:
     * Public references to variables.
     */
     TCPClient client;
-    char buffer[255];
+    char buffer[1024];
 
     /**
     * Constructor.
