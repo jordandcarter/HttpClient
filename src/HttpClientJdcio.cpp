@@ -63,7 +63,7 @@ void HttpClientJdcio::request(http_request_t &aRequest, http_response_t &aRespon
     // to ensure all fields are zero
     bool connected = false;
     if(aRequest.hostname!=NULL) {
-        connected = client.connect(aRequest.hostname, (aRequest.port) ? aRequest.port : 80 );
+        connected = client.connect(aRequest.hostname.c_str(), (aRequest.port) ? aRequest.port : 80 );
     }   else {
         connected = client.connect(aRequest.ip, aRequest.port);
     }
@@ -111,7 +111,7 @@ void HttpClientJdcio::request(http_request_t &aRequest, http_response_t &aRespon
     // Send General and Request Headers.
     sendHeader("Connection", "close"); // Not supporting keep-alive for now.
     if(aRequest.hostname!=NULL) {
-        sendHeader("HOST", aRequest.hostname);
+        sendHeader("HOST", aRequest.hostname.c_str());
     }
 
     //Send Entity Headers

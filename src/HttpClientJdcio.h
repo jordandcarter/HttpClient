@@ -34,13 +34,13 @@ typedef struct
  */
 typedef struct
 {
-  char hostname[50];
+  String hostname;
   IPAddress ip;
-  char path[255];
+  String path;
   // TODO: Look at setting the port by default.
   //int port = 80;
   int port;
-  char body[255];
+  String body;
   uint16_t timeout;
 } http_request_t;
 
